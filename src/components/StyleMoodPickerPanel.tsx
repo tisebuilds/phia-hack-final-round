@@ -55,10 +55,27 @@ export function StyleMoodPickerPanel({ value, onChange }: Props) {
                   : 'ring-0 ring-offset-0'
               } `}
             >
-              <div
-                className="absolute inset-0"
-                style={{ background: m.gradient }}
-              />
+              <div className="absolute inset-0">
+                {m.image ? (
+                  <>
+                    <img
+                      src={m.image}
+                      alt=""
+                      className="h-full w-full object-cover"
+                      style={{ objectPosition: m.imagePosition ?? 'center' }}
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-[58%] bg-gradient-to-t from-black/55 via-black/18 to-transparent"
+                      aria-hidden
+                    />
+                  </>
+                ) : (
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: m.gradient }}
+                  />
+                )}
+              </div>
               {isOn && (
                 <span className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-phia-blue text-white">
                   <Check className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden />
@@ -66,7 +83,11 @@ export function StyleMoodPickerPanel({ value, onChange }: Props) {
               )}
               <div
                 className={`absolute bottom-2.5 left-2.5 right-2.5 font-serif text-[15px] font-medium leading-tight ${
-                  m.labelTone === 'light' ? 'text-white' : 'text-[#1a1a1a]'
+                  m.image
+                    ? 'text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)]'
+                    : m.labelTone === 'light'
+                      ? 'text-white'
+                      : 'text-[#1a1a1a]'
                 }`}
               >
                 {m.label}

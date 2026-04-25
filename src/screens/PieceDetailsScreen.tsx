@@ -178,7 +178,7 @@ export function PieceDetailsScreen({ piece, sourceCount, onBack, onClose, onOpen
             <button
               type="button"
               onClick={onBack}
-              className="flex w-full min-w-0 cursor-pointer items-center justify-center gap-1.5 py-3 font-sans text-[12px] font-semibold text-phia-text underline-offset-4 hover:underline"
+              className="flex w-full min-w-0 cursor-pointer items-center justify-center gap-1.5 py-3 font-sans text-[12px] font-semibold text-phia-blue underline-offset-4 hover:underline"
             >
               Add to collection
             </button>

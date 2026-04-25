@@ -140,6 +140,12 @@ export function CapsuleScreen({
               onShoePrev={() => cycleShoe(-1)}
               onShoeNext={() => cycleShoe(1)}
             />
+            <button
+              type="button"
+              className="mt-2 w-full cursor-pointer text-center text-[13px] font-medium text-phia-blue underline-offset-2 hover:underline"
+            >
+              Add to collection
+            </button>
           </div>
         )}
       </div>

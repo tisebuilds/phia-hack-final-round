@@ -1,5 +1,10 @@
 /** Mood cards for pick-2 style selection (aligns with PRD Screen 2). */
 
+import easyElevatedImg from '../assets/style-mood/easy-elevated.png'
+import polishedClassicImg from '../assets/style-mood/polished-classic.png'
+import sharpMinimalImg from '../assets/style-mood/sharp-minimal.png'
+import softTailoredImg from '../assets/style-mood/soft-tailored.png'
+
 export type StyleKey = 'polished' | 'soft' | 'sharp' | 'easy'
 
 const abbrev: Record<StyleKey, string> = {
@@ -12,10 +17,14 @@ const abbrev: Record<StyleKey, string> = {
 export type StyleMood = {
   key: StyleKey
   label: string
-  /** Full-bleed card background */
+  /** Full-bleed card background when no photo */
   gradient: string
-  /** Class for bottom label: light swatches need dark text */
+  /** Class for bottom label: light swatches need dark text (ignored when `image` is set) */
   labelTone: 'light' | 'dark'
+  /** Tile photo (gradient used as fallback if omitted) */
+  image?: string
+  /** `object-position` for the photo */
+  imagePosition?: string
 }
 
 export const styleMoods: StyleMood[] = [
@@ -24,24 +33,32 @@ export const styleMoods: StyleMood[] = [
     label: 'Polished classic',
     gradient: 'linear-gradient(160deg, #2C3144 0%, #4A5066 50%, #1A1F30 100%)',
     labelTone: 'light',
+    image: polishedClassicImg,
+    imagePosition: '50% 18%',
   },
   {
     key: 'soft',
     label: 'Soft tailored',
     gradient: 'linear-gradient(160deg, #C4A789 0%, #E8D7C0 50%, #8B6F52 100%)',
     labelTone: 'dark',
+    image: softTailoredImg,
+    imagePosition: '48% 35%',
   },
   {
     key: 'sharp',
     label: 'Sharp minimal',
     gradient: 'linear-gradient(160deg, #1A1A1A 0%, #3A3A3A 50%, #0A0A0A 100%)',
     labelTone: 'light',
+    image: sharpMinimalImg,
+    imagePosition: '52% 28%',
   },
   {
     key: 'easy',
     label: 'Easy elevated',
     gradient: 'linear-gradient(160deg, #E8E1D2 0%, #F5F0E2 50%, #C4B89E 100%)',
     labelTone: 'dark',
+    image: easyElevatedImg,
+    imagePosition: '50% 62%',
   },
 ]
 
