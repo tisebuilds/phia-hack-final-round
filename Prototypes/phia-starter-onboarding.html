@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phia Starter — Anchor-Based Onboarding Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-page: #EFEDE6;
+  --bg-app: #F4F3EF;
+  --card: #FFFFFF;
+  --card-soft: #ECEAE3;
+  --primary: #1B1FE8;
+  --primary-hover: #0F12C7;
+  --text: #0E0E0E;
+  --text-muted: #6B6B68;
+  --border: #E2E0D9;
+  --accent-orange: #E07A2D;
+  --resale-green: #2D8C5C;
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg-page);
+  min-height: 100vh;
+  color: var(--text);
+  padding: 40px 16px 60px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-header { max-width: 720px; margin: 0 auto 32px; text-align: center; }
+.page-header .label {
+  display: inline-block; font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; font-weight: 500;
+}
+.page-header h1 {
+  font-family: var(--serif); font-size: 30px; font-weight: 500;
+  margin-bottom: 8px; letter-spacing: -0.01em;
+}
+.page-header h1 em { font-style: italic; font-weight: 400; }
+.page-header p {
+  color: var(--text-muted); font-size: 14px; max-width: 480px;
+  margin: 0 auto; line-height: 1.5;
+}
+
+.phone {
+  max-width: 380px; margin: 0 auto;
+  background: var(--bg-app); border-radius: 36px;
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.10), 0 10px 24px rgba(0,0,0,0.06);
+  overflow: hidden; position: relative; height: 760px;
+}
+
+.screen {
+  display: none; padding: 28px 24px 24px; height: 100%;
+  overflow-y: auto; position: relative; flex-direction: column;
+}
+.screen.active { display: flex; }
+
+/* ============================
+   SCREEN 0 — Extension entry
+   ============================ */
+.ext-screen { padding: 0; background: #fff; }
+.ext-retailer-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #fff 0%, #fff 50%, #f7f6f2 100%);
+  padding: 20px 18px;
+  font-family: var(--sans); color: #999;
+  font-size: 11px; line-height: 1.6;
+}
+.ext-retailer-bg .crumbs {
+  font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 14px; opacity: 0.5;
+}
+.ext-retailer-bg .pdp-title {
+  font-family: var(--serif); font-size: 18px; color: #444;
+  margin-bottom: 4px; font-weight: 500; opacity: 0.5;
+}
+.ext-retailer-bg .pdp-price { font-size: 14px; color: #444; margin-bottom: 14px; opacity: 0.5; }
+.ext-retailer-bg .pdp-photo {
+  width: 60%; aspect-ratio: 3/4; margin-bottom: 14px;
+  border-radius: 4px; opacity: 0.35;
+  background: linear-gradient(155deg, #6B7748 0%, #4A5530 50%, #2E371A 100%);
+}
+
+.ext-panel {
+  position: absolute; top: 50px; left: 16px; right: 16px; bottom: 24px;
+  background: #F2F1EC; border-radius: 18px; padding: 14px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+  overflow: hidden; display: flex; flex-direction: column;
+}
+
+.ext-header {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 12px;
+}
+.ext-logo { font-family: var(--serif); font-style: italic; font-size: 22px; font-weight: 500; }
+.ext-icons { display: flex; gap: 6px; }
+.ext-icon {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: #E2E0D9; display: flex; align-items: center;
+  justify-content: center; font-size: 13px; color: #555;
+}
+
+.ext-product {
+  background: #fff; border-radius: 12px; padding: 12px;
+  display: flex; gap: 12px; align-items: center; margin-bottom: 8px;
+}
+.ext-product-img {
+  width: 56px; height: 56px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(155deg, #6B7748 0%, #4A5530 50%, #2E371A 100%);
+}
+.ext-product-info { flex: 1; min-width: 0; }
+.ext-product-brand {
+  font-size: 10px; letter-spacing: 0.10em;
+  color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;
+}
+.ext-product-price { font-family: var(--serif); font-size: 20px; font-weight: 500; }
+.ext-product-bookmark {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: #F0EFEA; display: flex; align-items: center;
+  justify-content: center; font-size: 13px; color: #555;
+}
+
+.ext-price-pill {
+  background: #fff; border-radius: 10px; padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px; font-size: 13px;
+}
+.ext-price-pill .icon {
+  width: 18px; height: 18px;
+  background: linear-gradient(180deg, #E07A2D 0%, #B05810 100%);
+  border-radius: 50%;
+}
+.ext-price-pill .accent { color: var(--accent-orange); font-weight: 500; }
+.ext-price-pill .chev { margin-left: auto; color: var(--text-muted); font-size: 12px; }
+
+.ext-context {
+  background: #1A1A1A; border-radius: 14px; padding: 14px;
+  color: #fff; margin-bottom: 14px; position: relative;
+  animation: pulseGlow 2.4s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(27,31,232,0); }
+  50% { box-shadow: 0 0 0 6px rgba(27,31,232,0.15); }
+}
+.ext-context-q { font-size: 13px; margin-bottom: 10px; opacity: 0.95; }
+.ext-context-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ext-chip {
+  background: transparent; border: 1px solid rgba(255,255,255,0.25);
+  color: #fff; border-radius: 999px; padding: 6px 12px;
+  font-size: 12px; font-family: var(--sans); cursor: pointer;
+  transition: all 0.15s ease;
+}
+.ext-chip:hover { border-color: rgba(255,255,255,0.6); }
+.ext-chip.featured {
+  background: #fff; color: #1A1A1A;
+  border-color: #fff; font-weight: 500;
+}
+
+.ext-similar { flex: 1; overflow: hidden; position: relative; }
+.ext-similar-title {
+  font-family: var(--serif); font-size: 17px;
+  font-weight: 500; margin-bottom: 6px;
+}
+.ext-similar-row {
+  display: flex; align-items: center; background: #fff;
+  border-radius: 10px; padding: 8px 10px; margin-bottom: 6px;
+  gap: 10px; font-size: 11px;
+}
+.ext-similar-thumb {
+  width: 36px; height: 36px; border-radius: 6px; flex-shrink: 0;
+  background: linear-gradient(155deg, #6B7748 0%, #4A5530 50%, #2E371A 100%);
+}
+.ext-similar-info { flex: 1; min-width: 0; overflow: hidden; }
+.ext-similar-name {
+  font-weight: 500; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; margin-bottom: 1px;
+}
+.ext-similar-meta {
+  color: var(--text-muted); display: flex;
+  align-items: center; gap: 4px; font-size: 10px;
+}
+.ext-similar-meta .leaf { color: var(--resale-green); }
+.ext-similar-price { text-align: right; }
+.ext-similar-now { font-weight: 600; }
+.ext-similar-save { font-size: 9px; color: var(--text-muted); }
+
+/* ============================
+   SHARED
+   ============================ */
+.top-nav {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 24px;
+}
+.back-btn {
+  background: none; border: none; font-size: 22px;
+  cursor: pointer; color: var(--text); padding: 4px 8px;
+  font-family: var(--sans);
+}
+.progress { display: flex; gap: 6px; }
+.progress .dot {
+  width: 24px; height: 3px; border-radius: 3px;
+  background: #D9D7CF; transition: background 0.25s ease;
+}
+.progress .dot.active { background: var(--primary); }
+
+.title {
+  font-family: var(--serif); font-size: 28px; font-weight: 500;
+  line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 6px;
+}
+.title em { font-style: italic; font-weight: 400; }
+.subtitle {
+  color: var(--text-muted); font-size: 14px;
+  line-height: 1.5; margin-bottom: 18px;
+}
+
+/* Anchor card */
+.anchor-card {
+  background: #fff; border-radius: 14px; padding: 12px;
+  display: flex; gap: 12px; align-items: center;
+  margin-bottom: 18px; border: 1.5px solid var(--primary);
+  position: relative;
+}
+.anchor-card::before {
+  content: 'Your pick'; position: absolute; top: -9px; left: 14px;
+  background: var(--primary); color: #fff;
+  font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 2px 8px;
+  border-radius: 4px; font-weight: 500;
+}
+.anchor-img {
+  width: 56px; height: 56px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(155deg, #6B7748 0%, #4A5530 50%, #2E371A 100%);
+}
+.anchor-info { flex: 1; min-width: 0; }
+.anchor-brand {
+  font-size: 10px; letter-spacing: 0.10em;
+  color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;
+}
+.anchor-name {
+  font-family: var(--serif); font-size: 15px; font-weight: 500;
+  margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.anchor-price { font-size: 12px; color: var(--text-muted); }
+
+/* Fields */
+.field { margin-bottom: 12px; }
+.field-label {
+  font-size: 10px; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--text-muted);
+  margin-bottom: 5px; font-weight: 500;
+}
+.field-input {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; font-family: var(--sans); color: var(--text);
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; transition: border-color 0.15s ease;
+}
+.field-input:hover { border-color: #C4C2BB; }
+.field-input .edit { font-size: 11px; color: var(--primary); font-weight: 500; }
+
+.dress-code {
+  background: var(--card-soft); border-radius: 14px;
+  padding: 14px 16px; margin-top: 14px; margin-bottom: 18px;
+}
+.dress-code .label {
+  font-size: 10px; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--text-muted);
+  margin-bottom: 6px; font-weight: 500;
+}
+.dress-code .summary {
+  font-family: var(--serif); font-size: 15px; font-weight: 500;
+  line-height: 1.35; margin-bottom: 6px;
+}
+.dress-code .source { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+.cta {
+  width: 100%; background: var(--primary); color: #fff;
+  border: none; border-radius: 999px; padding: 14px 24px;
+  font-size: 14px; font-family: var(--sans); font-weight: 500;
+  cursor: pointer; margin-top: auto; transition: background 0.15s ease;
+}
+.cta:hover:not(:disabled) { background: var(--primary-hover); }
+.cta:disabled { background: #B6B5AE; cursor: not-allowed; }
+.cta.secondary {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border); margin-top: 0;
+}
+.cta.secondary:hover { background: var(--card); }
+
+/* ============================
+   SCREEN 2 — Style picker
+   ============================ */
+.style-helper {
+  font-size: 13px; color: var(--text-muted); margin-bottom: 16px;
+}
+.style-helper .count { color: var(--primary); font-weight: 500; }
+
+.style-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 24px;
+}
+.style-card {
+  position: relative; aspect-ratio: 3 / 4; border-radius: 14px;
+  overflow: hidden; cursor: pointer; border: 2px solid transparent;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+.style-card:hover { transform: translateY(-2px); }
+.style-card.selected { border-color: var(--primary); }
+.style-card .swatch { position: absolute; inset: 0; }
+.style-card[data-style="polished"] .swatch {
+  background: linear-gradient(160deg, #2C3144 0%, #4A5066 50%, #1A1F30 100%);
+}
+.style-card[data-style="soft"] .swatch {
+  background: linear-gradient(160deg, #C4A789 0%, #E8D7C0 50%, #8B6F52 100%);
+}
+.style-card[data-style="sharp"] .swatch {
+  background: linear-gradient(160deg, #1A1A1A 0%, #3A3A3A 50%, #0A0A0A 100%);
+}
+.style-card[data-style="easy"] .swatch {
+  background: linear-gradient(160deg, #E8E1D2 0%, #F5F0E2 50%, #C4B89E 100%);
+}
+.style-card .label {
+  position: absolute; bottom: 12px; left: 12px; right: 12px;
+  color: #fff; font-family: var(--serif);
+  font-size: 15px; font-weight: 500; z-index: 2;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.style-card[data-style="easy"] .label,
+.style-card[data-style="soft"] .label {
+  color: #1A1A1A; text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+}
+.style-card .check {
+  position: absolute; top: 10px; right: 10px;
+  width: 26px; height: 26px; background: var(--primary);
+  border-radius: 50%; display: none;
+  align-items: center; justify-content: center;
+  color: #fff; font-size: 14px; font-weight: 700; z-index: 2;
+}
+.style-card.selected .check { display: flex; }
+
+/* ============================
+   SCREEN 3 — Capsule reveal w/ tabs
+   ============================ */
+.capsule-tabs {
+  display: flex; background: var(--card-soft);
+  border-radius: 999px; padding: 3px; margin-bottom: 12px;
+  align-self: stretch;
+}
+.capsule-tab {
+  flex: 1; padding: 8px 14px; background: transparent;
+  border: none; border-radius: 999px; cursor: pointer;
+  font-size: 12px; font-family: var(--sans); color: var(--text-muted);
+  font-weight: 500; transition: all 0.15s ease;
+}
+.capsule-tab.active { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+.capsule-hero {
+  background: var(--card); border-radius: 14px; padding: 12px 14px;
+  margin-bottom: 10px; border: 1px solid var(--border);
+}
+.capsule-hero .stat-line {
+  display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px;
+}
+.capsule-hero .strike {
+  font-size: 13px; color: var(--text-muted); text-decoration: line-through;
+}
+.capsule-hero .price {
+  font-family: var(--serif); font-size: 24px;
+  font-weight: 500; letter-spacing: -0.01em;
+}
+.capsule-hero .meta { font-size: 11px; color: var(--text-muted); }
+.capsule-hero .typical {
+  font-size: 11px; color: var(--accent-orange);
+  margin-top: 4px; font-weight: 500;
+}
+
+.capsule-pills {
+  display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.pill {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 10px; font-size: 11px; color: var(--text);
+}
+.pill .accent { color: var(--primary); font-weight: 500; }
+
+/* Pieces view (grid) */
+.view-pieces { display: block; }
+.view-pieces.hidden { display: none; }
+
+.capsule-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 6px; margin-bottom: 12px;
+}
+.piece {
+  aspect-ratio: 3 / 4; border-radius: 8px;
+  overflow: hidden; cursor: pointer; position: relative;
+  transition: transform 0.15s ease;
+}
+.piece:hover { transform: translateY(-2px); }
+.piece.is-anchor { outline: 2px solid var(--primary); outline-offset: -2px; }
+.piece .swatch { position: absolute; inset: 0; }
+.piece .info {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 5px 7px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+  color: #fff;
+}
+.piece .name { font-size: 9px; font-weight: 500; margin-bottom: 1px; line-height: 1.2; }
+.piece .price { font-size: 8px; opacity: 0.9; }
+.piece .badge {
+  position: absolute; top: 5px; left: 5px;
+  background: rgba(255,255,255,0.95); color: var(--text);
+  font-size: 7px; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; padding: 2px 4px; border-radius: 3px;
+}
+.piece .badge.resale { background: rgba(45,140,92,0.95); color: #fff; }
+.piece .badge.anchor { background: var(--primary); color: #fff; }
+
+/* Outfits view (Cher's closet) */
+.view-outfits { display: none; flex-direction: column; flex: 1; }
+.view-outfits.active { display: flex; }
+
+.cher-header {
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.outfit-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.outfit-row {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.outfit-swatch {
+  width: 60px;
+  height: 80px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.outfit-swatch.is-anchor::after {
+  content: 'Your pick';
+  position: absolute;
+  top: 4px; left: 4px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 7px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.outfit-info { flex: 1; min-width: 0; }
+
+.outfit-cat {
+  font-size: 9px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.outfit-name {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.outfit-price {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.outfit-arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.arrow-btn {
+  width: 28px;
+  height: 22px;
+  background: var(--card-soft);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: var(--sans);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.arrow-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.arrow-btn:active { transform: scale(0.95); }
+
+.outfit-stat {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+.outfit-stat .price {
+  color: var(--text);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.cher-actions {
+  display: flex; gap: 8px; margin-top: auto;
+}
+
+.cher-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-family: var(--sans);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.cher-btn.save {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.cher-btn.save:hover { background: var(--card); }
+.cher-btn.save.saved {
+  background: #fce8e8;
+  color: #c44;
+  border-color: #c44;
+}
+
+.cher-btn.dress {
+  background: var(--primary);
+  color: #fff;
+}
+.cher-btn.dress:hover { background: var(--primary-hover); }
+
+/* Confidence sheet */
+.sheet-overlay {
+  position: absolute; inset: 0;
+  background: rgba(10,10,10,0.4);
+  display: none; z-index: 10;
+  border-radius: 36px; overflow: hidden;
+}
+.sheet-overlay.open { display: block; }
+.sheet {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: var(--bg-app); border-radius: 24px 24px 0 0;
+  padding: 14px 20px 20px; max-height: 90%;
+  overflow-y: auto; transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+.sheet-overlay.open .sheet { transform: translateY(0); }
+.sheet-handle {
+  width: 40px; height: 4px;
+  background: #C4C2BB; border-radius: 2px;
+  margin: 0 auto 12px;
+}
+.sheet-piece {
+  aspect-ratio: 3 / 2; border-radius: 12px;
+  margin-bottom: 12px; overflow: hidden; position: relative;
+}
+.sheet-piece .swatch { position: absolute; inset: 0; }
+.sheet-name { font-family: var(--serif); font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+.sheet-retailer { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+.sheet-price-row {
+  display: flex; align-items: baseline; gap: 8px;
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.sheet-price-row .now { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.sheet-price-row .was { font-size: 12px; color: var(--text-muted); text-decoration: line-through; }
+.sheet-price-row .save {
+  font-size: 10px; background: rgba(45,140,92,0.12);
+  color: var(--resale-green); padding: 3px 7px;
+  border-radius: 4px; font-weight: 500;
+}
+.confidence-card {
+  background: var(--card-soft); border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 12px;
+}
+.confidence-stat {
+  font-family: var(--serif); font-size: 15px;
+  font-weight: 500; line-height: 1.3; margin-bottom: 5px;
+}
+.confidence-source { font-size: 10px; color: var(--text-muted); line-height: 1.5; }
+.sheet-pairs { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5; }
+.sheet-pairs strong { color: var(--text); font-weight: 500; }
+
+/* Goes-with strip */
+.goes-with {
+  margin-bottom: 14px;
+}
+.goes-with-label {
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.goes-with-strip {
+  display: flex;
+  gap: 6px;
+}
+.gw-thumb {
+  flex: 1;
+  aspect-ratio: 3/4;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+.gw-thumb:hover { transform: translateY(-2px); }
+.gw-thumb .swatch { position: absolute; inset: 0; }
+.gw-thumb .name {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 4px 5px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.sheet-actions { display: flex; gap: 8px; }
+.sheet-actions .cta { flex: 1; margin-top: 0; padding: 12px; font-size: 13px; }
+
+/* Bottom controls */
+.controls {
+  max-width: 380px; margin: 24px auto 0;
+  display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+}
+.controls button {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 999px; padding: 8px 14px; font-size: 11px;
+  cursor: pointer; font-family: var(--sans); color: var(--text-muted);
+}
+.controls button:hover { background: rgba(255,255,255,0.5); }
+
+.note {
+  text-align: center; font-size: 11px;
+  color: var(--text-muted); margin-top: 16px;
+  font-style: italic; max-width: 440px;
+  margin-left: auto; margin-right: auto; line-height: 1.5;
+}
+
+/* Piece swatches */
+.s-aritzia { background: linear-gradient(155deg, #6B7748 0%, #4A5530 50%, #2E371A 100%); }
+.s-navy { background: linear-gradient(155deg, #1B2845 0%, #2C3A5C 60%, #11182B 100%); }
+.s-white-silk { background: linear-gradient(155deg, #F4F1EA 0%, #FFFFFF 50%, #E0DCD2 100%); }
+.s-cream { background: linear-gradient(155deg, #E8E1D2 0%, #F0EBDD 50%, #C8BFA8 100%); }
+.s-loafer { background: linear-gradient(155deg, #1A1A1A 0%, #2A2A2A 60%, #0A0A0A 100%); }
+.s-sneaker { background: linear-gradient(155deg, #FFFFFF 0%, #F4F2EC 60%, #DDD9CE 100%); }
+.s-trench { background: linear-gradient(155deg, #B89B7A 0%, #D4BB99 50%, #8B6F52 100%); }
+.s-jean { background: linear-gradient(155deg, #2A3445 0%, #3F4D63 50%, #19202C 100%); }
+.s-stripe { background: repeating-linear-gradient(155deg, #FFFFFF 0px, #FFFFFF 8px, #1B2845 8px, #1B2845 14px); }
+.s-turtleneck { background: linear-gradient(155deg, #1A1A1A 0%, #303030 50%, #0A0A0A 100%); }
+.s-tote { background: linear-gradient(155deg, #2C2825 0%, #4A4239 50%, #1C1815 100%); }
+.s-gold { background: linear-gradient(155deg, #C4A45A 0%, #DCC07F 40%, #8E7332 100%); }
+
+@keyframes pieceIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+.screen.active[data-screen="3"] .piece {
+  animation: pieceIn 0.4s ease backwards;
+}
+.screen.active[data-screen="3"] .piece:nth-child(1) { animation-delay: 0.05s; }
+.screen.active[data-screen="3"] .piece:nth-child(2) { animation-delay: 0.10s; }
+.screen.active[data-screen="3"] .piece:nth-child(3) { animation-delay: 0.15s; }
+.screen.active[data-screen="3"] .piece:nth-child(4) { animation-delay: 0.20s; }
+.screen.active[data-screen="3"] .piece:nth-child(5) { animation-delay: 0.25s; }
+.screen.active[data-screen="3"] .piece:nth-child(6) { animation-delay: 0.30s; }
+.screen.active[data-screen="3"] .piece:nth-child(7) { animation-delay: 0.35s; }
+.screen.active[data-screen="3"] .piece:nth-child(8) { animation-delay: 0.40s; }
+.screen.active[data-screen="3"] .piece:nth-child(9) { animation-delay: 0.45s; }
+.screen.active[data-screen="3"] .piece:nth-child(10) { animation-delay: 0.50s; }
+.screen.active[data-screen="3"] .piece:nth-child(11) { animation-delay: 0.55s; }
+.screen.active[data-screen="3"] .piece:nth-child(12) { animation-delay: 0.60s; }
+
+@keyframes outfitFlip {
+  0% { transform: rotateX(0); opacity: 1; }
+  50% { transform: rotateX(90deg); opacity: 0; }
+  100% { transform: rotateX(0); opacity: 1; }
+}
+.outfit-swatch.flipping { animation: outfitFlip 0.3s ease; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <span class="label">Phia Starter — Anchor-Based Onboarding</span>
+  <h1>The capsule starts with the <em>thing she already picked</em>.</h1>
+  <p>Sarah is mid-shop on an Aritzia trouser. The Phia extension surfaces a context anchor. Her capsule builds around her pick — view it as 12 pieces or mix outfits Cher's-closet style.</p>
+</div>
+
+<div class="phone">
+
+  <!-- ============================================
+       SCREEN 0 — EXTENSION ENTRY POINT
+       ============================================ -->
+  <div class="screen ext-screen active" data-screen="0">
+    <div class="ext-retailer-bg">
+      <div class="crumbs">Aritzia / Babaton / Effortless Pant</div>
+      <div class="pdp-title">Effortless Pant</div>
+      <div class="pdp-price">$148</div>
+      <div class="pdp-photo"></div>
+      <div>Soft, fluid, falls away from the body. Mid-rise wide leg in a heavyweight crepe...</div>
+    </div>
+
+    <div class="ext-panel">
+      <div class="ext-header">
+        <div class="ext-logo">phia</div>
+        <div class="ext-icons">
+          <div class="ext-icon">🔔</div>
+          <div class="ext-icon">👤</div>
+          <div class="ext-icon">×</div>
+        </div>
+      </div>
+
+      <div class="ext-product">
+        <div class="ext-product-img"></div>
+        <div class="ext-product-info">
+          <div class="ext-product-brand">Aritzia</div>
+          <div class="ext-product-price">$148</div>
+        </div>
+        <div class="ext-product-bookmark">🔖</div>
+      </div>
+
+      <div class="ext-price-pill">
+        <span class="icon"></span>
+        <span>This price is <span class="accent">typical</span></span>
+        <span class="chev">⌄</span>
+      </div>
+
+      <div class="ext-context">
+        <div class="ext-context-q">Anything coming up?</div>
+        <div class="ext-context-chips">
+          <button class="ext-chip featured" onclick="goTo(1)">Work start</button>
+          <button class="ext-chip" onclick="goTo(1)">Concert</button>
+          <button class="ext-chip" onclick="goTo(1)">School / campus</button>
+          <button class="ext-chip" onclick="goTo(1)">Halloween</button>
+          <button class="ext-chip" onclick="goTo(1)">Work holiday party</button>
+        </div>
+        <div style="margin-top: 10px; font-size: 11px; color: rgba(255,255,255,0.7); line-height: 1.4;">
+          Tap a moment — your capsule appears instantly.
+        </div>
+      </div>
+
+      <div class="ext-similar">
+        <div class="ext-similar-title">See visually similar</div>
+        <div class="ext-similar-row">
+          <div class="ext-similar-thumb"></div>
+          <div class="ext-similar-info">
+            <div class="ext-similar-name">Aritzia Babaton Pant</div>
+            <div class="ext-similar-meta"><span class="leaf">●</span> Used Poshmark · Size 2</div>
+          </div>
+          <div class="ext-similar-price">
+            <div class="ext-similar-now">$50</div>
+            <div class="ext-similar-save">66% less</div>
+          </div>
+        </div>
+        <div class="ext-similar-row">
+          <div class="ext-similar-thumb"></div>
+          <div class="ext-similar-info">
+            <div class="ext-similar-name">Aritzia Effortless Olive</div>
+            <div class="ext-similar-meta"><span class="leaf">●</span> Used Depop · Size 0</div>
+          </div>
+          <div class="ext-similar-price">
+            <div class="ext-similar-now">$28</div>
+            <div class="ext-similar-save">81% less</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SCREEN 1 — CONFIRM SETUP
+       ============================================ -->
+  <div class="screen" data-screen="1">
+    <div class="top-nav">
+      <button class="back-btn" onclick="goTo(0)" aria-label="Back">←</button>
+      <div class="progress"><span class="dot active"></span><span class="dot"></span></div>
+      <span style="width: 32px;"></span>
+    </div>
+
+    <h2 class="title">Phia's read on your <em>work start</em>.</h2>
+    <p class="subtitle">From your LinkedIn + browsing. Tap edit if anything's off, or just continue.</p>
+
+    <div class="anchor-card">
+      <div class="anchor-img"></div>
+      <div class="anchor-info">
+        <div class="anchor-brand">Aritzia</div>
+        <div class="anchor-name">Effortless Pant</div>
+        <div class="anchor-price">$148 new · $50 used (Poshmark)</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Industry</div>
+      <div class="field-input"><span>Consulting</span><span class="edit">Edit</span></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Start date</div>
+      <div class="field-input"><span>June 22, 2026</span><span class="edit">Edit</span></div>
+    </div>
+    <div class="field">
+      <div class="field-label">Budget for the capsule</div>
+      <div class="field-input"><span>$500</span><span class="edit">Edit</span></div>
+    </div>
+
+    <div class="dress-code">
+      <div class="label">What we know about your dress code</div>
+      <div class="summary">Polished business casual — blazers, loafers, quiet luxury.</div>
+      <div class="source">Sourced from 2,140 current consultants · updated weekly</div>
+    </div>
+
+    <button class="cta" onclick="goTo(3)">Build my capsule</button>
+  </div>
+
+  <!-- ============================================
+       SCREEN 2 — STYLE PICKER (deprecated per Phia feedback —
+       kept hidden in case you want to demo it; not in main flow)
+       ============================================ -->
+  <div class="screen" data-screen="2">
+    <div class="top-nav">
+      <button class="back-btn" onclick="goTo(1)" aria-label="Back">←</button>
+      <div class="progress"><span class="dot"></span><span class="dot active"></span><span class="dot"></span></div>
+      <span style="width: 32px;"></span>
+    </div>
+
+    <h2 class="title">Which <em>two</em> feel most like you?</h2>
+    <p class="style-helper">Pick 2 — Phia tunes the rest. <span class="count" id="style-count">0/2 selected</span></p>
+
+    <div class="style-grid">
+      <div class="style-card" data-style="polished" onclick="toggleStyle(this)">
+        <div class="swatch"></div><div class="check">✓</div>
+        <div class="label">Polished classic</div>
+      </div>
+      <div class="style-card" data-style="soft" onclick="toggleStyle(this)">
+        <div class="swatch"></div><div class="check">✓</div>
+        <div class="label">Soft tailored</div>
+      </div>
+      <div class="style-card" data-style="sharp" onclick="toggleStyle(this)">
+        <div class="swatch"></div><div class="check">✓</div>
+        <div class="label">Sharp minimal</div>
+      </div>
+      <div class="style-card" data-style="easy" onclick="toggleStyle(this)">
+        <div class="swatch"></div><div class="check">✓</div>
+        <div class="label">Easy elevated</div>
+      </div>
+    </div>
+
+    <button class="cta" id="style-cta" disabled onclick="goTo(3)">Build my capsule</button>
+  </div>
+
+  <!-- ============================================
+       SCREEN 3 — CAPSULE REVEAL (Pieces + Outfits)
+       ============================================ -->
+  <div class="screen" data-screen="3">
+    <div class="top-nav">
+      <button class="back-btn" onclick="goTo(1)" aria-label="Back">←</button>
+      <div class="progress"><span class="dot"></span><span class="dot active"></span></div>
+      <span style="width: 32px;"></span>
+    </div>
+
+    <h2 class="title">Built around your <em>Aritzia trouser</em>.</h2>
+    <p class="subtitle">12 pieces, 20 outfits, day one to day ninety.</p>
+
+    <div class="capsule-tabs">
+      <button class="capsule-tab" data-tab="pieces" onclick="setTab('pieces')">Pieces (12)</button>
+      <button class="capsule-tab active" data-tab="outfits" onclick="setTab('outfits')">Outfits (20)</button>
+    </div>
+
+    <div class="capsule-hero">
+      <div class="stat-line">
+        <span class="strike">$1,116</span>
+        <span class="price">$487</span>
+      </div>
+      <div class="meta">7 resale · 5 new · saves $629</div>
+      <div class="typical">↓ 62% below typical · returns: 8% vs 38% industry</div>
+    </div>
+
+    <!-- Pieces view -->
+    <div class="view-pieces" id="view-pieces" style="display: none;">
+      <div class="capsule-grid">
+        <div class="piece is-anchor" onclick="showSheet('aritzia')">
+          <div class="swatch s-aritzia"></div>
+          <div class="badge anchor">Your pick</div>
+          <div class="info"><div class="name">Aritzia trouser</div><div class="price">$50 used</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('blazer')">
+          <div class="swatch s-navy"></div>
+          <div class="badge resale">Resale</div>
+          <div class="info"><div class="name">Tailored blazer</div><div class="price">$48</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('shell')">
+          <div class="swatch s-white-silk"></div>
+          <div class="badge resale">Resale</div>
+          <div class="info"><div class="name">Silk shell</div><div class="price">$32</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('cashmere')">
+          <div class="swatch s-cream"></div>
+          <div class="badge resale">Resale</div>
+          <div class="info"><div class="name">Cashmere crew</div><div class="price">$58</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('loafer')">
+          <div class="swatch s-loafer"></div>
+          <div class="badge">New</div>
+          <div class="info"><div class="name">Leather loafer</div><div class="price">$65</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('sneaker')">
+          <div class="swatch s-sneaker"></div>
+          <div class="badge">New</div>
+          <div class="info"><div class="name">White sneaker</div><div class="price">$40</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('trench')">
+          <div class="swatch s-trench"></div>
+          <div class="badge resale">Resale</div>
+          <div class="info"><div class="name">Tan trench</div><div class="price">$89</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('jean')">
+          <div class="swatch s-jean"></div>
+          <div class="badge">New</div>
+          <div class="info"><div class="name">Dark wash jean</div><div class="price">$35</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('stripe')">
+          <div class="swatch s-stripe"></div>
+          <div class="badge resale">Resale</div>
+          <div class="info"><div class="name">Stripe button-down</div><div class="price">$24</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('turtleneck')">
+          <div class="swatch s-turtleneck"></div>
+          <div class="badge resale">Resale</div>
+          <div class="info"><div class="name">Knit turtleneck</div><div class="price">$18</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('tote')">
+          <div class="swatch s-tote"></div>
+          <div class="badge resale">Resale</div>
+          <div class="info"><div class="name">Structured tote</div><div class="price">$32</div></div>
+        </div>
+        <div class="piece" onclick="showSheet('hoops')">
+          <div class="swatch s-gold"></div>
+          <div class="badge">New</div>
+          <div class="info"><div class="name">Gold hoops</div><div class="price">$14</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Outfits view (Cher's closet) -->
+    <div class="view-outfits active" id="view-outfits" style="display: flex;">
+      <div class="cher-header">— Cher's closet, but make it Phia —</div>
+
+      <div class="outfit-stack">
+        <!-- Top -->
+        <div class="outfit-row">
+          <div class="outfit-swatch" id="o-top-swatch"></div>
+          <div class="outfit-info">
+            <div class="outfit-cat">Top</div>
+            <div class="outfit-name" id="o-top-name">—</div>
+            <div class="outfit-price" id="o-top-price">—</div>
+          </div>
+          <div class="outfit-arrows">
+            <button class="arrow-btn" onclick="cycle('top', -1)">◀</button>
+            <button class="arrow-btn" onclick="cycle('top', 1)">▶</button>
+          </div>
+        </div>
+
+        <!-- Bottom -->
+        <div class="outfit-row">
+          <div class="outfit-swatch" id="o-bottom-swatch"></div>
+          <div class="outfit-info">
+            <div class="outfit-cat">Bottom</div>
+            <div class="outfit-name" id="o-bottom-name">—</div>
+            <div class="outfit-price" id="o-bottom-price">—</div>
+          </div>
+          <div class="outfit-arrows">
+            <button class="arrow-btn" onclick="cycle('bottom', -1)">◀</button>
+            <button class="arrow-btn" onclick="cycle('bottom', 1)">▶</button>
+          </div>
+        </div>
+
+        <!-- Shoes -->
+        <div class="outfit-row">
+          <div class="outfit-swatch" id="o-shoe-swatch"></div>
+          <div class="outfit-info">
+            <div class="outfit-cat">Shoes</div>
+            <div class="outfit-name" id="o-shoe-name">—</div>
+            <div class="outfit-price" id="o-shoe-price">—</div>
+          </div>
+          <div class="outfit-arrows">
+            <button class="arrow-btn" onclick="cycle('shoe', -1)">◀</button>
+            <button class="arrow-btn" onclick="cycle('shoe', 1)">▶</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="outfit-stat">
+        Outfit <span id="outfit-num">1</span> of 20 · <span class="price">$<span id="outfit-total">163</span></span> total · <span id="outfit-context">Day-1 ready</span>
+      </div>
+
+      <div class="cher-actions">
+        <button class="cher-btn save" id="save-btn" onclick="toggleSave()">♡ Save outfit</button>
+        <button class="cher-btn dress" onclick="dressMe()">✨ Dress Me</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Confidence Sheet -->
+  <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet(event)">
+    <div class="sheet" id="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-piece"><div class="swatch" id="sheet-swatch"></div></div>
+      <div class="sheet-name" id="sheet-name">—</div>
+      <div class="sheet-retailer" id="sheet-retailer">—</div>
+      <div class="sheet-price-row">
+        <span class="now" id="sheet-now">—</span>
+        <span class="was" id="sheet-was">—</span>
+        <span class="save" id="sheet-save">—</span>
+      </div>
+      <div class="confidence-card">
+        <div class="confidence-stat" id="sheet-stat">—</div>
+        <div class="confidence-source">Sourced from 2,140 current consultants · updated weekly</div>
+      </div>
+      <div class="sheet-pairs"><strong>Pairs with:</strong> <span id="sheet-pairs">—</span></div>
+      <div class="goes-with">
+        <div class="goes-with-label">Complete the look</div>
+        <div class="goes-with-strip" id="sheet-goes-with"></div>
+      </div>
+      <div class="sheet-actions">
+        <button class="cta secondary" onclick="closeSheet()">Swap</button>
+        <button class="cta" onclick="closeSheet()">Keep it</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls">
+  <button onclick="goTo(0)">Restart</button>
+  <button onclick="goTo(2)">Style</button>
+  <button onclick="goTo(3)">Skip to capsule</button>
+</div>
+
+<p class="note">
+  Pieces view = trust mechanic (tap any piece for sourced confidence). Outfits view = mix-and-match Cher's-closet logic over the same 12 pieces.
+</p>
+
+<script>
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-screen="${n}"]`).classList.add('active');
+  closeSheet();
+}
+
+let selected = [];
+function toggleStyle(card) {
+  if (card.classList.contains('selected')) {
+    card.classList.remove('selected');
+    selected = selected.filter(c => c !== card);
+  } else if (selected.length < 2) {
+    card.classList.add('selected');
+    selected.push(card);
+  }
+  document.getElementById('style-count').textContent = `${selected.length}/2 selected`;
+  document.getElementById('style-cta').disabled = selected.length !== 2;
+}
+
+const pieceData = {
+  aritzia: { name: 'Aritzia Effortless Pant', retailer: 'via Poshmark (used) — your pick', now: '$50', was: '$148', save: '66% less', swatch: 's-aritzia', stat: 'In 76% of first-year consulting wardrobes — your pick anchors the rest.', pairs: 'Silk shell, blazer, loafer. The capsule was built around this.' },
+  blazer: { name: 'Theory tailored blazer', retailer: 'via The RealReal', now: '$48', was: '$340', save: '86% off', swatch: 's-navy', stat: 'In 78% of first-year consulting wardrobes.', pairs: 'Your Aritzia trouser, silk shell, leather loafer.' },
+  shell: { name: 'Vince silk shell', retailer: 'via Poshmark', now: '$32', was: '$185', save: '83% off', swatch: 's-white-silk', stat: 'In 71% of first-year consulting wardrobes.', pairs: 'Tailored blazer, your trouser, gold hoops.' },
+  cashmere: { name: 'Naadam crewneck', retailer: 'via The RealReal', now: '$58', was: '$220', save: '74% off', swatch: 's-cream', stat: 'In 62% of first-year consulting wardrobes.', pairs: 'Your trouser, dark jean, loafer.' },
+  loafer: { name: 'Sam Edelman Loraine', retailer: 'via Nordstrom', now: '$65', was: '$130', save: '50% off', swatch: 's-loafer', stat: 'In 81% of first-year consulting wardrobes.', pairs: 'Your trouser, jean, blazer.' },
+  sneaker: { name: 'Veja V-10', retailer: 'via Veja', now: '$40', was: '$165', save: '76% off', swatch: 's-sneaker', stat: 'In 58% of first-year consulting wardrobes.', pairs: 'Jean, button-down, trench.' },
+  trench: { name: 'Burberry Kensington', retailer: 'via The RealReal', now: '$89', was: '$1,890', save: '95% off', swatch: 's-trench', stat: 'In 44% of first-year consulting wardrobes — favored Sept–April.', pairs: 'Anything underneath. Reads instantly polished.' },
+  jean: { name: 'AGOLDE Riley straight', retailer: 'via Madewell', now: '$35', was: '$188', save: '81% off', swatch: 's-jean', stat: 'In 67% of first-year consulting wardrobes — Friday rotation.', pairs: 'Cashmere, button-down, sneaker.' },
+  stripe: { name: 'J.Crew slim button-down', retailer: 'via Poshmark', now: '$24', was: '$98', save: '76% off', swatch: 's-stripe', stat: 'In 53% of first-year consulting wardrobes.', pairs: 'Your trouser, dark jean, loafer.' },
+  turtleneck: { name: 'Uniqlo HEATTECH knit', retailer: 'via Uniqlo', now: '$18', was: '$30', save: '40% off', swatch: 's-turtleneck', stat: 'In 49% of first-year consulting wardrobes — winter layering.', pairs: 'Your trouser, jean, blazer.' },
+  tote: { name: 'Madewell Transport', retailer: 'via The RealReal', now: '$32', was: '$168', save: '81% off', swatch: 's-tote', stat: 'In 59% of first-year consulting wardrobes.', pairs: 'Every outfit. Holds a 13" laptop.' },
+  hoops: { name: 'Mejuri small hoops (gold-plated)', retailer: 'via Mejuri', now: '$14', was: '$58', save: '76% off', swatch: 's-gold', stat: 'In 73% of first-year consulting wardrobes.', pairs: 'Daily wear. Quiet, not flashy.' }
+};
+
+// "Complete the look" — for any tapped piece, show 3-4 capsule items it pairs with
+const goesWith = {
+  aritzia:    ['blazer', 'shell', 'loafer', 'hoops'],
+  blazer:     ['aritzia', 'shell', 'loafer', 'tote'],
+  shell:      ['aritzia', 'blazer', 'loafer', 'hoops'],
+  cashmere:   ['aritzia', 'jean', 'loafer', 'tote'],
+  loafer:     ['aritzia', 'blazer', 'shell', 'jean'],
+  sneaker:    ['jean', 'stripe', 'cashmere', 'trench'],
+  trench:     ['cashmere', 'jean', 'sneaker', 'tote'],
+  jean:       ['cashmere', 'stripe', 'sneaker', 'loafer'],
+  stripe:     ['aritzia', 'jean', 'loafer', 'tote'],
+  turtleneck: ['aritzia', 'jean', 'blazer', 'loafer'],
+  tote:       ['blazer', 'aritzia', 'loafer', 'cashmere'],
+  hoops:      ['shell', 'blazer', 'cashmere', 'aritzia']
+};
+
+function renderGoesWith(currentKey) {
+  const strip = document.getElementById('sheet-goes-with');
+  const keys = goesWith[currentKey] || [];
+  strip.innerHTML = keys.map(k => {
+    const d = pieceData[k];
+    const shortName = d.name.split(' ').slice(0, 2).join(' ');
+    return `
+      <div class="gw-thumb" onclick="event.stopPropagation(); showSheet('${k}')">
+        <div class="swatch ${d.swatch}"></div>
+        <div class="name">${shortName}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showSheet(key) {
+  const d = pieceData[key];
+  if (!d) return;
+  document.getElementById('sheet-swatch').className = 'swatch ' + d.swatch;
+  document.getElementById('sheet-name').textContent = d.name;
+  document.getElementById('sheet-retailer').textContent = d.retailer;
+  document.getElementById('sheet-now').textContent = d.now;
+  document.getElementById('sheet-was').textContent = d.was;
+  document.getElementById('sheet-save').textContent = d.save;
+  document.getElementById('sheet-stat').textContent = d.stat;
+  document.getElementById('sheet-pairs').textContent = d.pairs;
+  renderGoesWith(key);
+  document.getElementById('sheet-overlay').classList.add('open');
+}
+
+function closeSheet(e) {
+  if (e && e.target.closest('.sheet')) return;
+  document.getElementById('sheet-overlay').classList.remove('open');
+}
+
+/* ============================
+   Tabs
+   ============================ */
+function setTab(tab) {
+  document.querySelectorAll('.capsule-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.capsule-tab[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById('view-pieces').style.display = tab === 'pieces' ? 'block' : 'none';
+  document.getElementById('view-outfits').style.display = tab === 'outfits' ? 'flex' : 'none';
+}
+
+/* ============================
+   Cher's-closet outfit cycler
+   ============================ */
+const TOPS = [
+  { key: 'blazer', name: 'Theory blazer', price: 48, swatch: 's-navy' },
+  { key: 'shell', name: 'Vince silk shell', price: 32, swatch: 's-white-silk' },
+  { key: 'cashmere', name: 'Naadam cashmere', price: 58, swatch: 's-cream' },
+  { key: 'stripe', name: 'J.Crew button-down', price: 24, swatch: 's-stripe' },
+  { key: 'turtleneck', name: 'Uniqlo turtleneck', price: 18, swatch: 's-turtleneck' }
+];
+
+const BOTTOMS = [
+  { key: 'aritzia', name: 'Aritzia Effortless', price: 50, swatch: 's-aritzia', anchor: true },
+  { key: 'jean', name: 'AGOLDE straight jean', price: 35, swatch: 's-jean' }
+];
+
+const SHOES = [
+  { key: 'loafer', name: 'Sam Edelman loafer', price: 65, swatch: 's-loafer' },
+  { key: 'sneaker', name: 'Veja V-10 sneaker', price: 40, swatch: 's-sneaker' }
+];
+
+const CONTEXTS = [
+  'Day-1 ready', 'Client meeting', 'Casual Friday', 'Coffee with mentor',
+  'Office presentation', 'Late dinner with team', 'Weekend coworking', 'Travel day'
+];
+
+let topIdx = 0, bottomIdx = 0, shoeIdx = 0;
+let saved = false;
+
+function cycle(part, dir) {
+  let arr;
+  if (part === 'top') { arr = TOPS; topIdx = (topIdx + dir + arr.length) % arr.length; }
+  else if (part === 'bottom') { arr = BOTTOMS; bottomIdx = (bottomIdx + dir + arr.length) % arr.length; }
+  else { arr = SHOES; shoeIdx = (shoeIdx + dir + arr.length) % arr.length; }
+  flipSwatch(part);
+  renderOutfit();
+}
+
+function flipSwatch(part) {
+  const id = part === 'top' ? 'o-top-swatch' : part === 'bottom' ? 'o-bottom-swatch' : 'o-shoe-swatch';
+  const el = document.getElementById(id);
+  el.classList.add('flipping');
+  setTimeout(() => el.classList.remove('flipping'), 300);
+}
+
+function renderOutfit() {
+  const t = TOPS[topIdx], b = BOTTOMS[bottomIdx], s = SHOES[shoeIdx];
+
+  document.getElementById('o-top-swatch').className = 'outfit-swatch ' + t.swatch;
+  document.getElementById('o-top-name').textContent = t.name;
+  document.getElementById('o-top-price').textContent = '$' + t.price;
+
+  let bottomEl = document.getElementById('o-bottom-swatch');
+  bottomEl.className = 'outfit-swatch ' + b.swatch + (b.anchor ? ' is-anchor' : '');
+  document.getElementById('o-bottom-name').textContent = b.name;
+  document.getElementById('o-bottom-price').textContent = '$' + b.price + (b.anchor ? ' · used (Poshmark)' : '');
+
+  document.getElementById('o-shoe-swatch').className = 'outfit-swatch ' + s.swatch;
+  document.getElementById('o-shoe-name').textContent = s.name;
+  document.getElementById('o-shoe-price').textContent = '$' + s.price;
+
+  // Outfit number = combo index (1-based)
+  const num = topIdx * (BOTTOMS.length * SHOES.length) + bottomIdx * SHOES.length + shoeIdx + 1;
+  document.getElementById('outfit-num').textContent = num;
+  document.getElementById('outfit-total').textContent = t.price + b.price + s.price;
+  document.getElementById('outfit-context').textContent = CONTEXTS[num % CONTEXTS.length];
+
+  // Reset save state when outfit changes
+  saved = false;
+  document.getElementById('save-btn').classList.remove('saved');
+  document.getElementById('save-btn').innerHTML = '♡ Save outfit';
+}
+
+function dressMe() {
+  // Random combo, with a little flourish
+  topIdx = Math.floor(Math.random() * TOPS.length);
+  bottomIdx = Math.floor(Math.random() * BOTTOMS.length);
+  shoeIdx = Math.floor(Math.random() * SHOES.length);
+  flipSwatch('top'); flipSwatch('bottom'); flipSwatch('shoe');
+  renderOutfit();
+}
+
+function toggleSave() {
+  saved = !saved;
+  const btn = document.getElementById('save-btn');
+  btn.classList.toggle('saved', saved);
+  btn.innerHTML = saved ? '♥ Saved' : '♡ Save outfit';
+}
+
+renderOutfit();
+</script>
+
+</body>
+</html>

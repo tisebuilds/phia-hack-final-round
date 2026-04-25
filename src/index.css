@@ -1,0 +1,157 @@
+@import 'tailwindcss';
+
+/* Phia brand — self-hosted in /public/fonts */
+@font-face {
+  font-family: 'GT Super Display';
+  src: url('/fonts/GT-Super-Display-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GT Super Display';
+  src: url('/fonts/GT-Super-Display-Light-Italic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GT Super Display';
+  src: url('/fonts/GT-Super-Display-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GT Super Display';
+  src: url('/fonts/GT-Super-Display-Regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('/fonts/PPNeueMontreal-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('/fonts/NeueMontreal-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('/fonts/NeueMontreal-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('/fonts/NeueMontreal-MediumItalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('/fonts/NeueMontreal-Medium.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('/fonts/NeueMontreal-Medium.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  /* Extension UI (cool, neutral grayscale) */
+  --color-phia-canvas: #f3f3f3;
+  --color-phia-bg: #f4f4f4;
+  --color-phia-app: #f5f5f5;
+  --color-phia-card: #ffffff;
+  --color-phia-card-soft: #f5f5f5;
+  --color-phia-icon-bg: #ededed;
+  --color-phia-blue: #1b1fe8;
+  --color-phia-blue-hover: #0f12c7;
+  --color-phia-text: #0f0f0f;
+  --color-phia-muted: #6b7280;
+  --color-phia-muted-soft: #9ca3af;
+  --color-phia-border: #e5e7eb;
+  --color-phia-border-subtle: #eeeeee;
+  --color-phia-orange: #f97316;
+  --color-phia-resale: #168a5a;
+  --color-phia-success: #3b6d11;
+  --color-phia-on-canvas: #0f0f0f;
+  --color-phia-on-canvas-muted: #6b7280;
+  --font-sans: 'Neue Montreal', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'GT Super Display', ui-sans-serif, system-ui, sans-serif;
+  --ease-phia: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@layer base {
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--color-phia-canvas);
+    color: var(--color-phia-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Piece / sheet swatches — from static prototype */
+.s-aritzia {
+  background: linear-gradient(155deg, #6b7748 0%, #4a5530 50%, #2e371a 100%);
+}
+.s-navy {
+  background: linear-gradient(155deg, #1b2845 0%, #2c3a5c 60%, #11182b 100%);
+}
+.s-white-silk {
+  background: linear-gradient(155deg, #f4f1ea 0%, #ffffff 50%, #e0dcd2 100%);
+}
+.s-cream {
+  background: linear-gradient(155deg, #e8e1d2 0%, #f0ebdd 50%, #c8bfa8 100%);
+}
+.s-loafer {
+  background: linear-gradient(155deg, #1a1a1a 0%, #2a2a2a 60%, #0a0a0a 100%);
+}
+.s-sneaker {
+  background: linear-gradient(155deg, #ffffff 0%, #f4f2ec 60%, #ddd9ce 100%);
+}
+.s-boot {
+  background: linear-gradient(155deg, #0d0d0d 0%, #252018 45%, #1a1610 100%);
+}
+.s-mule {
+  background: linear-gradient(155deg, #c4a574 0%, #e8d4b8 50%, #8b7355 100%);
+}
+.s-oxford {
+  background: linear-gradient(155deg, #1c1410 0%, #3d2a22 55%, #0f0a08 100%);
+}
+.s-trench {
+  background: linear-gradient(155deg, #b89b7a 0%, #d4bb99 50%, #8b6f52 100%);
+}
+.s-jean {
+  background: linear-gradient(155deg, #2a3445 0%, #3f4d63 50%, #19202c 100%);
+}
+.s-stripe {
+  background: repeating-linear-gradient(155deg, #ffffff 0px, #ffffff 8px, #1b2845 8px, #1b2845 14px);
+}
+.s-turtleneck {
+  background: linear-gradient(155deg, #1a1a1a 0%, #303030 50%, #0a0a0a 100%);
+}
+.s-tote {
+  background: linear-gradient(155deg, #2c2825 0%, #4a4239 50%, #1c1815 100%);
+}
+.s-gold {
+  background: linear-gradient(155deg, #c4a45a 0%, #dcc07f 40%, #8e7332 100%);
+}
