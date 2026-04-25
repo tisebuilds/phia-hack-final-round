@@ -10,7 +10,7 @@ type Props = {
 export function Tabs({ value, onChange, pieceCount }: Props) {
   return (
     <div
-      className="mb-3 inline-flex w-fit rounded-full p-0.5"
+      className="inline-flex w-fit flex-shrink-0 self-center rounded-full p-0.5"
       style={{ backgroundColor: '#e4e4e7' }}
       role="tablist"
       aria-label="Capsule view"

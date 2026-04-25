@@ -2,8 +2,8 @@
 
 /** Widescreen “browser” stage (desktop PDP + right extension) — not a phone chassis. */
 export const DEMO_STAGE_MAX_W = 1120
-export const DEMO_STAGE_MIN_H = 520
-export const DEMO_STAGE_VH = 0.72
+export const DEMO_STAGE_MIN_H = 640
+export const DEMO_STAGE_VH = 0.82
 
 /** macOS Chrome window chrome: tab strip (36px) + omnibox row (48px) */
 export const CHROME_HEADER_H = 84

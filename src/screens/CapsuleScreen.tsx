@@ -93,22 +93,23 @@ export function CapsuleScreen({
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <h2
-          className={`font-['Cormorant_Garamond',ui-serif,Georgia,serif] text-[32px] font-medium leading-[1.1] tracking-[-0.02em] text-[#0f0f0f] ${
+        <div
+          className={`flex min-w-0 flex-nowrap items-center justify-between gap-x-3 ${
             capsuleView === 'outfits' ? 'mb-2' : 'mb-3'
           }`}
         >
-          Built for your pick
-        </h2>
-
-        <Tabs
-          value={capsuleView}
-          onChange={(v) => {
-            onCapsuleViewChange(v)
-            if (v === 'pieces') setPiecesAnimated(true)
-          }}
-          pieceCount={consultingCapsule.length}
-        />
+          <h2 className="min-w-0 flex-1 basis-0 truncate font-['Cormorant_Garamond',ui-serif,Georgia,serif] text-[28.8px] font-medium leading-[1.1] tracking-[-0.02em] text-[#0f0f0f]">
+            Styled for you
+          </h2>
+          <Tabs
+            value={capsuleView}
+            onChange={(v) => {
+              onCapsuleViewChange(v)
+              if (v === 'pieces') setPiecesAnimated(true)
+            }}
+            pieceCount={consultingCapsule.length}
+          />
+        </div>
 
         {capsuleView === 'pieces' && (
           <div className="mb-3 grid grid-cols-3 gap-1.5">
@@ -130,8 +131,6 @@ export function CapsuleScreen({
               top={top}
               anchor={ANCHOR_TROUSER}
               shoe={shoe}
-              topKey={String(top.id)}
-              shoeKey={String(shoe.id)}
               topSlideIndex={topIdx}
               topSlideCount={DEMO_TOPS.length}
               shoeSlideIndex={shoeIdx}

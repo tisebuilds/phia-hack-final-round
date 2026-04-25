@@ -3,8 +3,8 @@ import { ArrowLeftRight } from 'lucide-react'
 import { formatCurrency } from '../../lib/format'
 import type { DemoSlotPiece } from '../../data/capsuleOutfitDemo'
 
-const swapNavOverlayBtn =
-  'absolute top-1/2 z-[2] flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#e5e7eb] text-[#111827] opacity-100 shadow-[0_1px_2px_rgba(0,0,0,0.12)] transition-colors duration-150 hover:bg-[#d1d5db] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#1f3aff]'
+const swapIconClass =
+  'z-[2] -my-0.5 inline-flex h-5 shrink-0 items-center justify-center self-baseline rounded p-0.5 text-phia-muted transition-colors group-hover:text-phia-text'
 
 function SlotImage({ src, alt }: { src: string; alt: string }) {
   return (
@@ -20,11 +20,11 @@ function SlotImage({ src, alt }: { src: string; alt: string }) {
 
 function pieceCaptionRow(piece: DemoSlotPiece) {
   return (
-    <div className="flex min-w-0 items-center justify-between gap-3">
-      <p className="min-w-0 truncate text-[12px] font-medium leading-tight tracking-tight text-phia-text">
+    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <p className="m-0 min-w-0 break-words [overflow-wrap:anywhere] text-[12px] font-medium leading-tight tracking-tight text-phia-text sm:text-[13px]">
         {piece.name}
       </p>
-      <p className="shrink-0 text-[12px] font-medium leading-snug text-phia-muted">
+      <p className="min-w-0 text-[12px] font-medium leading-snug text-phia-muted sm:text-[13px]">
         {formatCurrency(piece.price)}
       </p>
     </div>
@@ -52,59 +52,54 @@ function CarouselDots({ activeIndex, total }: { activeIndex: number; total: numb
 
 type SwappableProps = {
   piece: DemoSlotPiece
-  contentKey: string
   slideIndex: number
   slideCount: number
   onPrev: () => void
   onNext: () => void
 }
 
+const tapTransition = { type: 'tween' as const, duration: 0.12, ease: [0.2, 0, 0.2, 1] as const }
+
 function SwappableColumn({
   piece,
-  contentKey,
   slideIndex,
   slideCount,
-  onPrev,
+  onPrev: _onPrev,
   onNext,
 }: SwappableProps) {
   return (
-    <motion.div
-      key={contentKey}
-      className="group relative w-full min-w-0 overflow-hidden rounded-xl border border-phia-border bg-phia-card shadow-[0_2px_6px_rgba(0,0,0,0.06)]"
+    <motion.button
+      type="button"
+      onClick={onNext}
+      className="group relative w-full min-w-0 cursor-pointer overflow-hidden rounded-xl border border-phia-border bg-phia-card p-0 text-left shadow-[0_2px_6px_rgba(0,0,0,0.06)] outline-offset-2 outline-[#1f3aff] focus-visible:outline focus-visible:outline-2"
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1, scale: [1, 1.03, 1] }}
-      transition={{
-        opacity: { duration: 0.2, ease: [0.32, 0.72, 0, 1] },
-        scale: { duration: 0.45, ease: [0.32, 0.72, 0, 1], times: [0, 0.35, 1] },
-      }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
+      whileTap={{ scale: 0.99, transition: tapTransition }}
+      aria-label={`Swap option. Now showing: ${piece.name}.`}
     >
-      <div className="flex min-w-0 items-center gap-3 px-3 py-2.5 pr-10 sm:px-3.5 sm:py-3 sm:pr-11">
-        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-phia-icon-bg sm:h-14 sm:w-14">
+      <div className="flex min-w-0 items-stretch gap-3 px-3 py-3.5 sm:gap-3.5 sm:px-4 sm:py-4">
+        <div className="relative h-[72px] w-[72px] shrink-0 self-center overflow-hidden rounded-xl bg-phia-icon-bg sm:h-20 sm:w-20">
           <div className="absolute inset-0 flex items-center justify-center">
-            <SlotImage src={piece.imageSrc} alt={piece.name} />
+            <SlotImage src={piece.imageSrc} alt="" />
           </div>
           <CarouselDots activeIndex={slideIndex} total={slideCount} />
-          <button
-            type="button"
-            onClick={onPrev}
-            className="sr-only"
-            aria-hidden="true"
-            tabIndex={-1}
-          >
-            Previous option
-          </button>
         </div>
-        {pieceCaptionRow(piece)}
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+          <p className="m-0 flex min-w-0 items-start gap-1.5 text-[12px] font-medium leading-tight tracking-tight text-phia-text sm:text-[13px]">
+            <span className="min-w-0 w-max max-w-[calc(100%-1.5rem)] [overflow-wrap:anywhere] break-words">
+              {piece.name}
+            </span>
+            <span className={swapIconClass} aria-hidden>
+              <ArrowLeftRight className="size-3" strokeWidth={2} />
+            </span>
+          </p>
+          <p className="min-w-0 text-[12px] font-medium leading-snug text-phia-muted sm:text-[13px]">
+            {formatCurrency(piece.price)}
+          </p>
+        </div>
       </div>
-      <button
-        type="button"
-        onClick={onNext}
-        className={`${swapNavOverlayBtn} right-2`}
-        aria-label="Next option"
-      >
-        <ArrowLeftRight className="size-3" strokeWidth={2} aria-hidden />
-      </button>
-    </motion.div>
+    </motion.button>
   )
 }
 
@@ -114,16 +109,21 @@ function AnchorColumn({ piece, contentKey }: AnchorProps) {
   return (
     <motion.div
       key={contentKey}
-      className="relative w-full min-w-0 overflow-hidden rounded-xl border border-phia-border bg-phia-card shadow-[0_2px_6px_rgba(0,0,0,0.06)]"
+      className="w-full min-w-0 overflow-hidden rounded-xl border border-phia-border bg-phia-card shadow-[0_2px_6px_rgba(0,0,0,0.06)]"
       initial={false}
     >
-      <div className="flex min-w-0 items-center gap-3 px-3 py-2.5 sm:px-3.5 sm:py-3">
-        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-phia-icon-bg sm:h-14 sm:w-14">
+      <div className="flex min-w-0 items-stretch gap-3 px-3 py-3.5 sm:gap-3.5 sm:px-4 sm:py-4">
+        <div className="relative h-[72px] w-[72px] shrink-0 self-center overflow-hidden rounded-xl bg-phia-icon-bg sm:h-20 sm:w-20">
           <div className="absolute inset-0 flex items-center justify-center">
             <SlotImage src={piece.imageSrc} alt={piece.name} />
           </div>
         </div>
-        {pieceCaptionRow(piece)}
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+          <span className="self-start rounded bg-phia-blue px-1 py-0.5 text-[7px] font-semibold uppercase tracking-wide text-white">
+            Your pick
+          </span>
+          {pieceCaptionRow(piece)}
+        </div>
       </div>
     </motion.div>
   )
@@ -133,8 +133,6 @@ type Props = {
   top: DemoSlotPiece
   anchor: DemoSlotPiece
   shoe: DemoSlotPiece
-  topKey: string
-  shoeKey: string
   topSlideIndex: number
   topSlideCount: number
   shoeSlideIndex: number
@@ -149,8 +147,6 @@ export function CapsuleOutfitStack({
   top,
   anchor,
   shoe,
-  topKey,
-  shoeKey,
   topSlideIndex,
   topSlideCount,
   shoeSlideIndex,
@@ -166,7 +162,6 @@ export function CapsuleOutfitStack({
     >
       <SwappableColumn
         piece={top}
-        contentKey={topKey}
         slideIndex={topSlideIndex}
         slideCount={topSlideCount}
         onPrev={onTopPrev}
@@ -175,7 +170,6 @@ export function CapsuleOutfitStack({
       <AnchorColumn piece={anchor} contentKey="anchor" />
       <SwappableColumn
         piece={shoe}
-        contentKey={shoeKey}
         slideIndex={shoeSlideIndex}
         slideCount={shoeSlideCount}
         onPrev={onShoePrev}

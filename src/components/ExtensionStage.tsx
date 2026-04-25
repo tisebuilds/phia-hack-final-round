@@ -32,7 +32,7 @@ export function ExtensionStage({ currentScreen, panel, onRestart }: Props) {
       style={{
         maxWidth: DEMO_STAGE_MAX_W,
         minHeight: DEMO_STAGE_MIN_H,
-        height: `min(${DEMO_STAGE_VH * 100}vh, 700px)`,
+        height: `min(${DEMO_STAGE_VH * 100}vh, 860px)`,
         borderRadius: 16,
       }}
     >

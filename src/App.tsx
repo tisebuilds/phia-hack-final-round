@@ -23,6 +23,8 @@ function App() {
     setCapsuleView,
     industryKey,
     setIndustryKey,
+    styleKeys,
+    setStyleKeys,
   } = useScreenRouter(defaultDevScreen)
 
   const [dressMeTick, setDressMeTick] = useState(0)
@@ -91,6 +93,8 @@ function App() {
             onContinue={() => setScreen(2)}
             industryKey={industryKey}
             onIndustryChange={setIndustryKey}
+            styleKeys={styleKeys}
+            onStyleKeysChange={setStyleKeys}
           />
         </motion.div>
       )}

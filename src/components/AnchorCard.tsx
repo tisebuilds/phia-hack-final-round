@@ -1,32 +1,25 @@
-import { pieceByKey } from '../data/capsule'
+type Props = {
+  styleCode: string
+  onStyleCodeClick: () => void
+}
 
-export function AnchorCard() {
-  const anchorSrc = pieceByKey('aritzia')?.imageSrc
-
+export function AnchorCard({ styleCode, onStyleCodeClick }: Props) {
   return (
-    <div className="relative mb-[18px] flex items-center gap-3 rounded-[14px] border-[1.5px] border-phia-blue bg-white p-3">
-      <span className="absolute -top-2 left-3.5 rounded bg-phia-blue px-2 py-0.5 font-sans text-[10px] font-medium uppercase tracking-[0.08em] text-white">
-        Your pick
-      </span>
-      <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg">
-        {anchorSrc ? (
-          <img
-            src={anchorSrc}
-            alt=""
-            className="h-full w-full object-cover"
-            draggable={false}
-          />
-        ) : (
-          <div className="h-full w-full s-aritzia" />
-        )}
+    <div className="mb-4">
+      <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-phia-muted">
+        Style code
       </div>
-      <div className="min-w-0 flex-1 pt-1">
-        <div className="mb-0.5 text-[10px] font-medium uppercase tracking-[0.1em] text-phia-muted">
-          Aritzia
-        </div>
-        <div className="mb-0.5 truncate font-serif text-[15px] font-medium">Effortless Pant</div>
-        <div className="text-xs text-phia-muted">$148 new · $50 used (Poshmark)</div>
-      </div>
+      <button
+        type="button"
+        onClick={onStyleCodeClick}
+        className="flex w-full items-center justify-between gap-3 rounded-xl border border-phia-border bg-white px-3.5 py-3 text-left transition hover:bg-phia-app"
+        aria-label={`Edit style code: ${styleCode}`}
+      >
+        <span className="min-w-0 font-mono text-sm font-medium tabular-nums text-phia-text">
+          {styleCode}
+        </span>
+        <span className="shrink-0 font-sans text-sm font-medium text-phia-blue">Edit</span>
+      </button>
     </div>
   )
 }

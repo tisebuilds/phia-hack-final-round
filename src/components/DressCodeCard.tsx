@@ -1,8 +1,10 @@
-type Props = { summary: string; sourceCount: number }
+type Props = { summary: string; sourceCount: number; className?: string }
 
-export function DressCodeCard({ summary, sourceCount }: Props) {
+export function DressCodeCard({ summary, sourceCount, className = '' }: Props) {
   return (
-    <div className="mb-4.5 mt-3.5 rounded-[14px] bg-phia-card-soft px-4 py-3.5">
+    <div
+      className={`rounded-[14px] bg-phia-card-soft bg-gradient-to-b from-black/4 to-black/4 px-4 py-3.5 ${className}`.trim()}
+    >
       <div className="mb-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-phia-muted">
         What we know about your dress code
       </div>
