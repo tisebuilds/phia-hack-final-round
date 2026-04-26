@@ -17,6 +17,8 @@ import phiaWordmarkBlack from '../assets/phia-wordmark-black.svg'
 import { pieceByKey } from '../data/capsule'
 import { ARITZIA_PANTS_PRODUCT_SRC } from '../data/capsuleImages'
 import {
+  EASY_CARE_DETAILS,
+  FABRIC_QUALITY_DETAILS,
   OCCASION_LABELS,
   occasionFitPill,
   verdictForOccasion,
@@ -161,18 +163,71 @@ function OccasionAnswerBlock({
   )
 }
 
+const occasionPillClass = (positive: boolean) =>
+  [
+    'shrink-0 rounded-full px-2.5 py-1 font-sans text-[11px] font-semibold leading-none tracking-[-0.01em]',
+    positive
+      ? 'bg-[#e3f2e6] text-phia-success'
+      : 'bg-[#f3ece2] text-[#5c442e]',
+  ].join(' ')
+
 function OccasionStatusPill({ positive, children }: { positive: boolean; children: ReactNode }) {
+  return <span className={occasionPillClass(positive)}>{children}</span>
+}
+
+const criterionQuestionButtonClass =
+  'min-w-0 flex-1 cursor-pointer rounded-md text-left font-sans text-[13px] font-medium leading-snug text-phia-text underline-offset-2 transition-colors hover:text-phia-blue hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-blue/35 focus-visible:ring-offset-0'
+
+const criterionPillButtonClass =
+  'cursor-pointer transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-blue/35 focus-visible:ring-offset-0'
+
+function ExpandableCriterionRow({
+  label,
+  details,
+  pillText,
+  pillPositive,
+  open,
+  onToggle,
+  rowDivider,
+  ariaNoteTopic,
+}: {
+  label: string
+  details: string
+  pillText: string
+  pillPositive: boolean
+  open: boolean
+  onToggle: () => void
+  rowDivider: string
+  /** Short phrase for aria-label, e.g. “fabric quality”. */
+  ariaNoteTopic: string
+}) {
   return (
-    <span
-      className={[
-        'shrink-0 rounded-full px-2.5 py-1 font-sans text-[11px] font-semibold leading-none tracking-[-0.01em]',
-        positive
-          ? 'bg-[#e3f2e6] text-phia-success'
-          : 'bg-[#f3ece2] text-[#5c442e]',
-      ].join(' ')}
-    >
-      {children}
-    </span>
+    <>
+      <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${rowDivider}`}>
+        <button type="button" onClick={onToggle} aria-expanded={open} className={criterionQuestionButtonClass}>
+          {label}
+        </button>
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-label={open ? `Hide Phia’s ${ariaNoteTopic} note` : `Show Phia’s ${ariaNoteTopic} note`}
+          className={[occasionPillClass(pillPositive), criterionPillButtonClass].join(' ')}
+        >
+          {pillText}
+        </button>
+      </div>
+      {open ? (
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
+          className={rowDivider}
+        >
+          <p className="px-3.5 py-2.5 font-sans text-[12px] leading-relaxed text-phia-muted">{details}</p>
+        </motion.div>
+      ) : null}
+    </>
   )
 }
 
@@ -185,9 +240,13 @@ function OccasionFitCard({
   onOccasionChange: (next: OccasionLabel) => void
   onOccasionCapsuleCta: () => void
 }) {
-  const { appropriate } = verdictForOccasion(occasion)
+  const [occasionDetailsOpen, setOccasionDetailsOpen] = useState(false)
+  const [fabricDetailsOpen, setFabricDetailsOpen] = useState(false)
+  const [careDetailsOpen, setCareDetailsOpen] = useState(false)
+  const { appropriate, message } = verdictForOccasion(occasion)
   const fit = occasionFitPill(occasion)
   const rowDivider = 'border-b border-phia-border-subtle'
+  const toggleOccasionDetails = () => setOccasionDetailsOpen((o) => !o)
 
   return (
     <motion.div
@@ -198,9 +257,14 @@ function OccasionFitCard({
       className="flex flex-col"
     >
       <div className={`flex items-center gap-2.5 px-3.5 py-2.5 ${rowDivider}`}>
-        <span className="shrink-0 font-sans text-[13px] font-medium leading-snug text-phia-text">
+        <button
+          type="button"
+          onClick={toggleOccasionDetails}
+          aria-expanded={occasionDetailsOpen}
+          className="shrink-0 cursor-pointer rounded-md text-left font-sans text-[13px] font-medium leading-snug text-phia-text underline-offset-2 transition-colors hover:text-phia-blue hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-blue/35 focus-visible:ring-offset-0"
+        >
           Right for the occasion?
-        </span>
+        </button>
         <div className="relative min-w-0 flex-1">
           <select
             value={occasion}
@@ -220,18 +284,52 @@ function OccasionFitCard({
             aria-hidden
           />
         </div>
-        <OccasionStatusPill positive={fit.positive}>{fit.text}</OccasionStatusPill>
+        <button
+          type="button"
+          onClick={toggleOccasionDetails}
+          aria-expanded={occasionDetailsOpen}
+          aria-label={occasionDetailsOpen ? 'Hide Phia’s occasion note' : 'Show Phia’s occasion note'}
+          className={[
+            occasionPillClass(fit.positive),
+            'cursor-pointer transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-blue/35 focus-visible:ring-offset-0',
+          ].join(' ')}
+        >
+          {fit.text}
+        </button>
       </div>
 
-      <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${rowDivider}`}>
-        <span className="font-sans text-[13px] font-medium leading-snug text-phia-text">Fabric quality?</span>
-        <OccasionStatusPill positive={false}>Average</OccasionStatusPill>
-      </div>
+      {occasionDetailsOpen ? (
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
+          className={rowDivider}
+        >
+          <p className="px-3.5 py-2.5 font-sans text-[12px] leading-relaxed text-phia-muted">{message}</p>
+        </motion.div>
+      ) : null}
 
-      <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${rowDivider}`}>
-        <span className="font-sans text-[13px] font-medium leading-snug text-phia-text">Easy to care for?</span>
-        <OccasionStatusPill positive={false}>Maybe</OccasionStatusPill>
-      </div>
+      <ExpandableCriterionRow
+        label="Fabric quality?"
+        details={FABRIC_QUALITY_DETAILS}
+        pillText="Average"
+        pillPositive={false}
+        open={fabricDetailsOpen}
+        onToggle={() => setFabricDetailsOpen((o) => !o)}
+        rowDivider={rowDivider}
+        ariaNoteTopic="fabric quality"
+      />
+
+      <ExpandableCriterionRow
+        label="Easy to care for?"
+        details={EASY_CARE_DETAILS}
+        pillText="Maybe"
+        pillPositive={false}
+        open={careDetailsOpen}
+        onToggle={() => setCareDetailsOpen((o) => !o)}
+        rowDivider={rowDivider}
+        ariaNoteTopic="care instructions"
+      />
 
       <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${rowDivider}`}>
         <span className="font-sans text-[13px] font-medium leading-snug text-phia-text">Right for your climate?</span>

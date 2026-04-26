@@ -12,7 +12,7 @@ This PRD is written for Cursor (or any agentic coding tool). Paste it into a new
 
 **This prototype.** A demo built to walk an audience through the user journey in 3 minutes. Not a real product. The data is hand-curated, the company logic is faked, the checkout doesn't work. Every interaction should feel polished and tactile — this is a *visual craft* deliverable.
 
-**The persona being demoed.** Sarah, 22, just graduated, starts at a consulting firm in 2 weeks, $500 budget, mid-shop on an Aritzia Effortless Pant ($148).
+**The persona being demoed.** Edith, 22, just graduated, starts at a consulting firm in 2 weeks, $500 budget, mid-shop on an Aritzia Effortless Pant ($148).
 
 **Demo requirements.**
 - Run on a 1440×900 laptop screen, projected.
@@ -332,7 +332,7 @@ If time permits, replace gradients with real product imagery via Unsplash query 
 
 ### Screen 0 — Phia extension entry
 
-**Purpose.** Mock the existing Phia Chrome extension as Sarah sees it mid-shop. The "Anything coming up?" black bar is the new layer. The product surface is **Chrome extension over a real tab**; the demo frame is projection-friendly presentation chrome (see repo `src/config/prototype.ts` for layout constants).
+**Purpose.** Mock the existing Phia Chrome extension as Edith sees it mid-shop. The "Anything coming up?" black bar is the new layer. The product surface is **Chrome extension over a real tab**; the demo frame is projection-friendly presentation chrome (see repo `src/config/prototype.ts` for layout constants).
 
 **Aritzia PDP in context (implementation).** The retailer layer mimics the live product page: [The Effortless Pant (Crepette) on Aritzia](https://www.aritzia.com/us/en/product/the-effortless-pant%E2%84%A2/77775.html?color=1274). Use a **full-bleed screenshot** at `public/aritzia-effortless-pdp.png` (not an iframe; retailer sites often block embeds). Optionally add a very light dim/scrim so the Phia panel reads clearly.
 
@@ -510,7 +510,7 @@ Add the following to make the live pitch easier:
   - `D` → "Dress Me" if on Outfits view.
   - `Escape` → close confidence sheet if open.
 
-- **Auto-advance on the entry screen** (stretch): after 4 seconds of being on Screen 0, the "Work start" chip glows briefly to draw attention. Not auto-clicked — Sarah still has to tap.
+- **Auto-advance on the entry screen** (stretch): after 4 seconds of being on Screen 0, the "Work start" chip glows briefly to draw attention. Not auto-clicked — Edith still has to tap.
 
 ## 10. Definition of done
 

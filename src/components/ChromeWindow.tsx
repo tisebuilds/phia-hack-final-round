@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { CHROME_HEADER_H } from '../config/prototype'
-import sarahAvatar from '../assets/sarah.png'
+import edithAvatar from '../assets/edith.png'
 import phiaExtensionImage from '../assets/phia-extension.png'
 import puzzleIcon from '../assets/extension-puzzle.png'
 import refreshIcon from '../assets/refresh-icon.png'
@@ -175,11 +175,11 @@ export function ChromeWindow({ url, title, onRestart, children, className = '', 
             </button>
             <span
               className="inline-flex size-7 overflow-hidden rounded-full bg-[#1a73e8]"
-              aria-label="Sarah profile"
+              aria-label="Edith profile"
             >
               <img
-                src={sarahAvatar}
-                alt="Sarah"
+                src={edithAvatar}
+                alt="Edith"
                 className="h-full w-full object-cover"
                 loading="lazy"
                 decoding="async"
