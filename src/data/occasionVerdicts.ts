@@ -58,10 +58,10 @@ export function occasionFitPill(label: OccasionLabel): { text: 'Yes' | 'No'; pos
   return appropriate ? { text: 'Yes', positive: true } : { text: 'No', positive: false }
 }
 
-/** Expandable “Fabric quality?” copy — future PDP row (demo: Effortless trouser). */
+/** Expandable “Fabric quality” copy — future PDP row (demo: Effortless trouser). */
 export const FABRIC_QUALITY_DETAILS =
   'This piece uses Aritzia’s crepe-blend weave: smooth hand-feel and holds its line through a workday. Phia flags it as average for resale only because we can’t verify wear in photos — in person it’s typically very good for the category.'
 
-/** Expandable “Easy to care for?” copy — future PDP row. */
+/** Expandable “Easy to care for” copy — future PDP row. */
 export const EASY_CARE_DETAILS =
   'Machine-wash cold on gentle, lay flat or hang to dry — no dry-clean required for everyday wear. If you’re hard on trousers (frequent travel, long commutes), expect a little more pressing than a knit would need.'
