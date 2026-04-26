@@ -181,6 +181,10 @@ const criterionQuestionButtonClass =
 const criterionPillButtonClass =
   'cursor-pointer transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-blue/35 focus-visible:ring-offset-0'
 
+/** Expanded copy: soft panel + primary text; section border sits on the wrapper below (not under header). */
+const expandableDetailBodyClass =
+  'rounded-lg bg-phia-card-soft px-3 py-2.5 font-sans text-[12px] leading-relaxed text-phia-text'
+
 function ExpandableCriterionRow({
   label,
   details,
@@ -203,7 +207,7 @@ function ExpandableCriterionRow({
 }) {
   return (
     <>
-      <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${rowDivider}`}>
+      <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${open ? '' : rowDivider}`}>
         <button type="button" onClick={onToggle} aria-expanded={open} className={criterionQuestionButtonClass}>
           {label}
         </button>
@@ -222,9 +226,9 @@ function ExpandableCriterionRow({
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
-          className={rowDivider}
+          className={`px-3.5 pb-2.5 pt-2 ${rowDivider}`}
         >
-          <p className="px-3.5 py-2.5 font-sans text-[12px] leading-relaxed text-phia-muted">{details}</p>
+          <p className={expandableDetailBodyClass}>{details}</p>
         </motion.div>
       ) : null}
     </>
@@ -256,7 +260,9 @@ function OccasionFitCard({
       transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
       className="flex flex-col"
     >
-      <div className={`flex items-center gap-2.5 px-3.5 py-2.5 ${rowDivider}`}>
+      <div
+        className={`flex items-center gap-2.5 px-3.5 py-2.5 ${occasionDetailsOpen ? '' : rowDivider}`}
+      >
         <button
           type="button"
           onClick={toggleOccasionDetails}
@@ -303,9 +309,9 @@ function OccasionFitCard({
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
-          className={rowDivider}
+          className={`px-3.5 pb-2.5 pt-2 ${rowDivider}`}
         >
-          <p className="px-3.5 py-2.5 font-sans text-[12px] leading-relaxed text-phia-muted">{message}</p>
+          <p className={expandableDetailBodyClass}>{message}</p>
         </motion.div>
       ) : null}
 
