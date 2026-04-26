@@ -368,7 +368,7 @@ export function ExtensionScreen({ onOccasionCapsuleCta }: Props) {
                   value={selectedContext}
                   onChange={(e) => setSelectedContext(e.target.value as OccasionLabel)}
                   aria-label="Shopping occasion"
-                  className="h-9 w-full min-h-[36px] min-w-0 max-w-full cursor-pointer appearance-none rounded-md border border-phia-border/90 bg-white py-0 pr-8 pl-2.5 font-sans text-[12px] font-medium text-phia-text shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-colors hover:border-phia-border focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-border/70 focus-visible:ring-offset-0"
+                  className="h-9 w-full min-h-[36px] min-w-0 max-w-full cursor-pointer appearance-none rounded-md border border-phia-border/90 bg-white py-0 pr-8 pl-2.5 font-sans text-[12px] font-medium text-phia-text transition-colors hover:border-phia-border focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-border/70 focus-visible:ring-offset-0"
                 >
                   {OCCASION_LABELS.map((label) => (
                     <option key={label} value={label}>

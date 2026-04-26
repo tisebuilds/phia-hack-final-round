@@ -1,15 +1,19 @@
+import type { ReactNode } from 'react'
+
 type Props = {
   onRestart: () => void
   onSetup: () => void
   onCapsule: () => void
+  prefix?: ReactNode
 }
 
-export function DemoControls({ onRestart, onSetup, onCapsule }: Props) {
+export function DemoControls({ onRestart, onSetup, onCapsule, prefix }: Props) {
   return (
     <div
-      className="mx-auto mt-6 flex max-w-[min(100%,720px)] flex-wrap justify-center gap-3"
+      className="mx-auto mt-4 flex max-w-[min(100%,720px)] flex-wrap items-center justify-center gap-3"
       aria-label="Demo controls"
     >
+      {prefix}
       <button
         type="button"
         onClick={onRestart}
