@@ -51,3 +51,9 @@ const VERDICTS: Record<OccasionLabel, OccasionVerdict> = {
 export function verdictForOccasion(label: OccasionLabel): OccasionVerdict {
   return VERDICTS[label]
 }
+
+/** Short pill for “Right for the occasion?” row on PDP. */
+export function occasionFitPill(label: OccasionLabel): { text: 'Yes' | 'No'; positive: boolean } {
+  const { appropriate } = verdictForOccasion(label)
+  return appropriate ? { text: 'Yes', positive: true } : { text: 'No', positive: false }
+}

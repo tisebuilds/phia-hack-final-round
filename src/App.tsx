@@ -27,6 +27,7 @@ function App() {
     setStyleKeys,
   } = useScreenRouter(defaultDevScreen)
 
+  const [futureOccasionLayout, setFutureOccasionLayout] = useState(false)
   const [dressMeTick, setDressMeTick] = useState(0)
 
   const setScreen = useCallback(
@@ -35,6 +36,16 @@ function App() {
     },
     [go]
   )
+
+  const goFuture = useCallback(() => {
+    setFutureOccasionLayout(true)
+    setScreen(0)
+  }, [setScreen])
+
+  const restartDemo = useCallback(() => {
+    setFutureOccasionLayout(false)
+    setScreen(0)
+  }, [setScreen])
 
   useEffect(() => {
     if (!KEYBOARD_SHORTCUTS_ENABLED) return
@@ -51,7 +62,7 @@ function App() {
       }
       if (k === 'r') {
         e.preventDefault()
-        setScreen(0)
+        restartDemo()
         return
       }
       if (k === 'd') {
@@ -63,7 +74,7 @@ function App() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [currentScreen, capsuleView, setScreen])
+  }, [currentScreen, capsuleView, restartDemo, setScreen])
 
   const panel = (
     <AnimatePresence mode="wait">
@@ -76,7 +87,13 @@ function App() {
           exit={{ opacity: 0 }}
           transition={{ duration: SCREEN_MS / 1000, ease: EASE_PHIA }}
         >
-          <ExtensionScreen onOccasionCapsuleCta={() => setScreen(2)} />
+          <ExtensionScreen
+            futureOccasionLayout={futureOccasionLayout}
+            onOccasionCapsuleCta={() => {
+              setCapsuleView('outfits')
+              setScreen(2)
+            }}
+          />
         </motion.div>
       )}
       {currentScreen === 1 && (
@@ -121,13 +138,17 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#02003A] px-4 py-7 sm:py-9">
-      <ExtensionStage currentScreen={currentScreen} panel={panel} onRestart={() => setScreen(0)} />
+      <ExtensionStage currentScreen={currentScreen} panel={panel} onRestart={restartDemo} />
 
       <DemoControls
         prefix={<PageHeader className="mr-1" />}
-        onRestart={() => setScreen(0)}
+        onRestart={restartDemo}
         onSetup={() => setScreen(1)}
-        onCapsule={() => setScreen(2)}
+        onCapsule={() => {
+          setCapsuleView('outfits')
+          setScreen(2)
+        }}
+        onFuture={goFuture}
       />
     </div>
   )

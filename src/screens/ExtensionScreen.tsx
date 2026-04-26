@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import {
   Bell,
@@ -16,9 +16,18 @@ import {
 import phiaWordmarkBlack from '../assets/phia-wordmark-black.svg'
 import { pieceByKey } from '../data/capsule'
 import { ARITZIA_PANTS_PRODUCT_SRC } from '../data/capsuleImages'
-import { OCCASION_LABELS, verdictForOccasion, type OccasionLabel } from '../data/occasionVerdicts'
+import {
+  OCCASION_LABELS,
+  occasionFitPill,
+  verdictForOccasion,
+  type OccasionLabel,
+} from '../data/occasionVerdicts'
 
-type Props = { onOccasionCapsuleCta: () => void }
+type Props = {
+  onOccasionCapsuleCta: () => void
+  /** Row-based occasion card (multi-criteria pills) — enabled after using the Future demo pill. */
+  futureOccasionLayout?: boolean
+}
 
 const FILTER_CHIPS = ['Price', 'Brand', 'Color', 'Size', 'Condition'] as const
 
@@ -152,7 +161,100 @@ function OccasionAnswerBlock({
   )
 }
 
-export function ExtensionScreen({ onOccasionCapsuleCta }: Props) {
+function OccasionStatusPill({ positive, children }: { positive: boolean; children: ReactNode }) {
+  return (
+    <span
+      className={[
+        'shrink-0 rounded-full px-2.5 py-1 font-sans text-[11px] font-semibold leading-none tracking-[-0.01em]',
+        positive
+          ? 'bg-[#e3f2e6] text-phia-success'
+          : 'bg-[#f3ece2] text-[#5c442e]',
+      ].join(' ')}
+    >
+      {children}
+    </span>
+  )
+}
+
+function OccasionFitCard({
+  occasion,
+  onOccasionChange,
+  onOccasionCapsuleCta,
+}: {
+  occasion: OccasionLabel
+  onOccasionChange: (next: OccasionLabel) => void
+  onOccasionCapsuleCta: () => void
+}) {
+  const { appropriate } = verdictForOccasion(occasion)
+  const fit = occasionFitPill(occasion)
+  const rowDivider = 'border-b border-phia-border-subtle'
+
+  return (
+    <motion.div
+      key={occasion}
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.18, ease: [0.32, 0.72, 0, 1] }}
+      className="flex flex-col"
+    >
+      <div className={`flex items-center gap-2.5 px-3.5 py-2.5 ${rowDivider}`}>
+        <span className="shrink-0 font-sans text-[13px] font-medium leading-snug text-phia-text">
+          Right for the occasion?
+        </span>
+        <div className="relative min-w-0 flex-1">
+          <select
+            value={occasion}
+            onChange={(e) => onOccasionChange(e.target.value as OccasionLabel)}
+            aria-label="Occasion"
+            className="h-9 w-full min-h-[36px] min-w-0 max-w-full cursor-pointer appearance-none rounded-md border border-phia-blue bg-white py-0 pr-8 pl-2.5 font-sans text-[12px] font-medium text-phia-text shadow-[0_0_0_1px_rgba(27,31,232,0.12)] transition-colors hover:border-phia-blue-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-blue/35 focus-visible:ring-offset-0"
+          >
+            {OCCASION_LABELS.map((label) => (
+              <option key={label} value={label}>
+                {label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            className="pointer-events-none absolute top-1/2 right-2 h-3.5 w-3.5 -translate-y-1/2 text-phia-muted"
+            strokeWidth={2}
+            aria-hidden
+          />
+        </div>
+        <OccasionStatusPill positive={fit.positive}>{fit.text}</OccasionStatusPill>
+      </div>
+
+      <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${rowDivider}`}>
+        <span className="font-sans text-[13px] font-medium leading-snug text-phia-text">Fabric quality?</span>
+        <OccasionStatusPill positive={false}>Average</OccasionStatusPill>
+      </div>
+
+      <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${rowDivider}`}>
+        <span className="font-sans text-[13px] font-medium leading-snug text-phia-text">Easy to care for?</span>
+        <OccasionStatusPill positive={false}>Maybe</OccasionStatusPill>
+      </div>
+
+      <div className={`flex items-center justify-between gap-3 px-3.5 py-2.5 ${rowDivider}`}>
+        <span className="font-sans text-[13px] font-medium leading-snug text-phia-text">Right for your climate?</span>
+        <OccasionStatusPill positive>Yes</OccasionStatusPill>
+      </div>
+
+      {appropriate ? (
+        <div className="px-3.5 py-2.5">
+          <button
+            type="button"
+            onClick={onOccasionCapsuleCta}
+            className="flex cursor-pointer items-center gap-0.5 font-sans text-[13px] font-medium text-phia-text transition-colors hover:text-phia-blue"
+          >
+            See outfits
+            <ChevronRight className="h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden />
+          </button>
+        </div>
+      ) : null}
+    </motion.div>
+  )
+}
+
+export function ExtensionScreen({ onOccasionCapsuleCta, futureOccasionLayout = false }: Props) {
   const [priceConfidenceOpen, setPriceConfidenceOpen] = useState(false)
   const [selectedContext, setSelectedContext] = useState<OccasionLabel>('Work')
   const scrollRef = useRef<HTMLDivElement | null>(null)
@@ -358,35 +460,45 @@ export function ExtensionScreen({ onOccasionCapsuleCta }: Props) {
         </div>
 
         <div className="mb-3.5 overflow-hidden rounded-xl bg-white shadow-sm">
-          <div className="border-b border-phia-border-subtle bg-phia-card-soft/60 px-3.5 py-2.5">
-            <div className="flex min-h-9 items-center gap-3">
-              <div className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold leading-tight tracking-[-0.01em] text-phia-text">
-                Shopping for an occasion?
+          {futureOccasionLayout ? (
+            <OccasionFitCard
+              occasion={selectedContext}
+              onOccasionChange={setSelectedContext}
+              onOccasionCapsuleCta={onOccasionCapsuleCta}
+            />
+          ) : (
+            <>
+              <div className="border-b border-phia-border-subtle bg-phia-card-soft/60 px-3.5 py-2.5">
+                <div className="flex min-h-9 items-center gap-3">
+                  <div className="shrink-0 whitespace-nowrap font-sans text-[13px] font-semibold leading-tight tracking-[-0.01em] text-phia-text">
+                    Shopping for an occasion?
+                  </div>
+                  <div className="relative min-w-0 flex-1">
+                    <select
+                      value={selectedContext}
+                      onChange={(e) => setSelectedContext(e.target.value as OccasionLabel)}
+                      aria-label="Shopping occasion"
+                      className="h-9 w-full min-h-[36px] min-w-0 max-w-full cursor-pointer appearance-none rounded-md border border-phia-border/90 bg-white py-0 pr-8 pl-2.5 font-sans text-[12px] font-medium text-phia-text transition-colors hover:border-phia-border focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-border/70 focus-visible:ring-offset-0"
+                    >
+                      {OCCASION_LABELS.map((label) => (
+                        <option key={label} value={label}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="pointer-events-none absolute top-1/2 right-2 h-3.5 w-3.5 -translate-y-1/2 text-phia-muted"
+                      strokeWidth={2}
+                      aria-hidden
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="relative min-w-0 flex-1">
-                <select
-                  value={selectedContext}
-                  onChange={(e) => setSelectedContext(e.target.value as OccasionLabel)}
-                  aria-label="Shopping occasion"
-                  className="h-9 w-full min-h-[36px] min-w-0 max-w-full cursor-pointer appearance-none rounded-md border border-phia-border/90 bg-white py-0 pr-8 pl-2.5 font-sans text-[12px] font-medium text-phia-text transition-colors hover:border-phia-border focus:outline-none focus-visible:ring-2 focus-visible:ring-phia-border/70 focus-visible:ring-offset-0"
-                >
-                  {OCCASION_LABELS.map((label) => (
-                    <option key={label} value={label}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown
-                  className="pointer-events-none absolute top-1/2 right-2 h-3.5 w-3.5 -translate-y-1/2 text-phia-muted"
-                  strokeWidth={2}
-                  aria-hidden
-                />
+              <div className="px-3.5 py-3">
+                <OccasionAnswerBlock occasion={selectedContext} onOccasionCapsuleCta={onOccasionCapsuleCta} />
               </div>
-            </div>
-          </div>
-          <div className="px-3.5 py-3">
-            <OccasionAnswerBlock occasion={selectedContext} onOccasionCapsuleCta={onOccasionCapsuleCta} />
-          </div>
+            </>
+          )}
         </div>
 
         <div className="mb-2 flex items-center justify-between gap-2">
