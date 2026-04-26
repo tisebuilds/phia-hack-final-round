@@ -9,11 +9,13 @@ import {
   EXTENSION_PANEL_RADIUS,
   EXTENSION_PANEL_W,
 } from '../config/prototype'
-import type { ScreenIndex } from '../types'
+import type { CapsuleView, ScreenIndex } from '../types'
 import { ChromeWindow } from './ChromeWindow'
 
 type Props = {
   currentScreen: ScreenIndex
+  /** When screen 2, used to keep PDP vivid on Outfits only (Pieces stays dimmed). */
+  capsuleView?: CapsuleView
   panel: ReactNode
   onRestart: () => void
 }
@@ -22,8 +24,11 @@ type Props = {
  * Desktop “tab” view: Aritzia PDP as full-bleed background, Phia as a right-docked
  * extension panel (matches the pitch mockup — not a phone frame).
  */
-export function ExtensionStage({ currentScreen, panel, onRestart }: Props) {
-  const showPdpVivid = currentScreen === 0
+export function ExtensionStage({ currentScreen, capsuleView, panel, onRestart }: Props) {
+  const showPdpVivid =
+    currentScreen === 0 ||
+    currentScreen === 1 ||
+    (currentScreen === 2 && capsuleView === 'outfits')
   return (
     <ChromeWindow
       url={ARITZIA_PDP_URL}

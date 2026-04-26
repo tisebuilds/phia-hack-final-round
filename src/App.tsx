@@ -138,7 +138,12 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#02003A] px-4 py-7 sm:py-9">
-      <ExtensionStage currentScreen={currentScreen} panel={panel} onRestart={restartDemo} />
+      <ExtensionStage
+        currentScreen={currentScreen}
+        capsuleView={capsuleView}
+        panel={panel}
+        onRestart={restartDemo}
+      />
 
       <DemoControls
         prefix={<PageHeader className="mr-1" />}
